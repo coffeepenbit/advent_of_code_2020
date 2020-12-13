@@ -1,4 +1,4 @@
-;;; day3.el --- Day 3 Advent of Code 2020            -*- lexical-binding: t; -*-
+;;; day3.el --- Day 3 Advent of Code 2020
 
 ;; Copyright (C) 2020  kga
 
@@ -371,16 +371,24 @@
   (interactive)
   (let* ((matrix (day3--string-to-matrix day3-input))
          (nrep (day3--calc-nhoriz-repeat matrix day3-slope))
-         (repmat (day3--horiz-repeat-matrix matrix (+ 1 nrep)))
+         (repmat (day3--horiz-repeat-matrix matrix nrep))
          (ntrees 0)
          (nth-pos 0))
-    (let ((nth-pos 0))
-      (dotimes (i (/ (length matrix) (alist-get 'down day3-slope)) ntrees)
-        (when (equal day3-tree (day3--get-next-position repmat
-                                                        day3-slope
-                                                        nth-pos))
-          (setq ntrees (1+ ntrees)))
-        (setq nth-pos (1+ nth-pos))))))
+    (dotimes (ip
+              (day3--ntimes-down (length matrix)
+                                 (alist-get 'down day3-slope)))
+      (when (equal day3-tree (day3--get-next-position repmat
+                                                      day3-slope
+                                                      (+ 1 nth-pos)))
+        (setq ntrees (1+ ntrees)))
+      (setq nth-pos (1+ nth-pos)))
+    ntrees))
+
+
+(defun day3--ntimes-down (matrix-length down)
+  "Get number of times to go down in matrix based on MATRIX-LENGTH and DOWN slope."
+  (/ (- matrix-length 1) ; Account for initial position.
+     down))
 
 
 (defun day3--string-to-matrix (string)
@@ -398,10 +406,22 @@
 
 (defun day3--calc-nhoriz-repeat (matrix slope)
   "Calculate number horizontal repititions for MATRIX based on SLOPE."
-  (let* ((matrix-length (length matrix))
-         (matrix-width (length (aref (day3--get-row matrix 0) 0)))
-         (required-width (* matrix-length (alist-get 'right slope))))
-    (- (/ required-width matrix-width) 1)))
+  (let* ((nrequired-matrices (ceiling (/ (day3--horiz-required-width matrix slope)
+                                         (float (day3--matrix-width matrix))))))
+    ;; Account for initial matrix.
+    (- nrequired-matrices 1)))
+
+
+(defun day3--matrix-width (matrix)
+  "Calculate width of MATRIX."
+  (length (aref (day3--get-row matrix 0) 0)))
+
+
+(defun day3--horiz-required-width (matrix slope)
+  "Calculate required MATRIX width based on SLOPE."
+  (+ 1 ; Add one for initial position in matrix.
+     (* (day3--ntimes-down (length matrix) (alist-get 'down slope))
+        (alist-get 'right slope))))
 
 
 (defun day3--horiz-repeat-matrix (matrix nrep)
@@ -411,8 +431,8 @@
         (day3--set-row matrix
                        row-ind
                        (day3--horiz-repeat-row (day3--get-row matrix row-ind)
-                                               nrep))))
-  matrix)
+                                               nrep)))
+    matrix))
 
 
 (defun day3--horiz-repeat-row (row nrep)
@@ -440,12 +460,16 @@
 Multiply DAY3-SLOPE by NTH-POS to get beyond first next step."
   (let* ((nth-pos (or nth-pos 1))
          (right (* nth-pos (alist-get 'right day3-slope)))
-         (down (* nth-pos(alist-get 'down day3-slope))))
+         (down (* nth-pos (alist-get 'down day3-slope))))
     (aref (aref (day3--get-row matrix down) 0) right)))
 
 
-(defun day3-part2-solutoin nil)
-
+(defun day3-part2-solution nil
+  "Answer: 5007658656."
+  (let ((answer 1))
+    (dolist (slope day3-slopes answer)
+      (let ((day3-slope slope))
+        (setq answer (* answer (day3-part1-solution)))))))
 
 
 (provide 'day3)
