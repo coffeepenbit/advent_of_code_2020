@@ -24,6 +24,107 @@
 (load-file "../day3.el")
 
 
+(ert-deftest test-day3-part1-solution nil
+  (let ((day3-slope '((right . 3)
+                      (down . 1))))
+    (should (eq 0 (let ((day3-input "....
+....
+...."))
+                    (day3-part1-solution))))
+    (should (= 1 (let ((day3-input "....
+...#
+...."))
+                   (day3-part1-solution))))
+    (should (= 2 (let ((day3-input ".......
+...#...
+......#"))
+                   (day3-part1-solution))))
+    (should (= 1 (let ((day3-input ".......
+...#...
+......."))
+                   (day3-part1-solution))))
+    (should (= 2 (let ((day3-input "..........
+...#......
+..........
+.........#"))
+                   (day3-part1-solution))))
+    (should (= 2 (let ((day3-input "....
+...#
+....
+.#.."))
+                   (day3-part1-solution))))))
+
+
+(ert-deftest test-day3--string-to-matrix nil
+  (should (equal (vector (vector "abc") (vector "def"))
+                 (day3--string-to-matrix "abc\ndef"))))
+
+
+(ert-deftest test-day3--create-row nil
+  (should (equal ["abc"] (day3--create-row "abc"))))
+
+
+(ert-deftest test-day3--calc-nhoriz-repeat nil
+  (let ((slope '((right . 3)
+                 (down . 1))))
+    (let ((matrix [["..."] ["..#"]]))
+      (should (equal 1 (day3--calc-nhoriz-repeat matrix slope))))
+    (let ((matrix [["...."] ["...#"] ["...."] ["..#."]]))
+      (should (equal 2 (day3--calc-nhoriz-repeat matrix slope)))))
+  (let ((slope '((right . 3)
+                 (down . 2))))
+    (let ((matrix [["..."] ["..#"]]))
+      (should (equal 1 (day3--calc-nhoriz-repeat matrix slope))))
+    (let ((matrix [["...."] ["...#"] ["...."] ["..#."]]))
+      (should (equal 2 (day3--calc-nhoriz-repeat matrix slope))))))
+
+
+
+(ert-deftest test-day3--horiz-repeat-matrix nil
+  (let ((matrix [["..."] ["..#"]]))
+    (should (equal [["..."] ["..#"]] (day3--horiz-repeat-matrix matrix 0)))
+    (should (equal [["......"] ["..#..#"]] (day3--horiz-repeat-matrix matrix 1)))))
+
+
+(ert-deftest test-day3--horiz-repeat-row nil
+  (let ((row ["..#"]))
+    (should (equal ["..#"] (day3--horiz-repeat-row row 0)))
+    (should (equal ["..#..#"] (day3--horiz-repeat-row row 1)))))
+
+
+(ert-deftest test-day3--get-row nil
+  (let ((matrix [["..."] ["..#"]]))
+    (should (equal ["..."] (day3--get-row matrix 0)))
+    (should (equal ["..#"] (day3--get-row matrix 1)))))
+
+
+(ert-deftest test-day3--set-row nil
+  (let ((matrix [["..."] ["..#"]]))
+    (should (equal [["a"] ["..#"]] (day3--set-row matrix 0 ["a"])))))
+    ;; (should (equal ["..#"] (day3-set-row matrix 1)))))
+
+
+(ert-deftest test-day3--get-next-position nil
+  (let ((matrix [["......."] ["...#..."] ["......."]]))
+    (should (equal ?. (let ((day3-slope '((right . 0)
+                                          (down . 0))))
+                        (day3--get-next-position matrix day3-slope))))
+    (should (equal ?. (let ((day3-slope '((right . 1)
+                                          (down . 1))))
+                        (day3--get-next-position matrix day3-slope))))
+    (should (equal ?# (let ((day3-slope '((right . 3)
+                                          (down . 1))))
+                        (day3--get-next-position matrix day3-slope))))
+    (should (equal ?# (let ((day3-slope '((right . 3)
+                                          (down . 1)))
+                            (nth-pos 1))
+                        (day3--get-next-position matrix day3-slope nth-pos))))
+    (should (equal ?. (let ((day3-slope '((right . 3)
+                                          (down . 1)))
+                            (nth-pos 2))
+                        (day3--get-next-position matrix day3-slope nth-pos))))))
+
+
 
 (provide 'test-day3)
 ;;; test-day3.el ends here
