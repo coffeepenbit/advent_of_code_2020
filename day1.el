@@ -1,8 +1,8 @@
 ;;; day1.el --- Day 1 Advent of Code 2020            -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020  kga
+;; Copyright (C) 2020  coffeepenbit
 
-;; Author: kga <kga@Thinkpad-OpenSUSE>
+;; Author: coffeepenbit
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify

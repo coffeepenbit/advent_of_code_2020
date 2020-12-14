@@ -1,8 +1,8 @@
 ;;; test-day3.el --- Day 3 Advent of Code 2020
 
-;; Copyright (C) 2020  kga
+;; Copyright (C) 2020  coffeepenbit
 
-;; Author: kga <kga@Thinkpad-OpenSUSE>
+;; Author: coffeepenbit
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
