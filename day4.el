@@ -1,3 +1,4 @@
+
 ;;; day4.el --- Day 4 Advent of Code 2020
 
 ;; Copyright (C) 2020  coffeepenbit
@@ -1206,14 +1207,11 @@ byr:1959")
 (defvar day4-optional-passport-fields "cid") ; (Country ID)
 
 
-;; (defun day4-solution nil
-;;   "Answer: ."
-;;   (day4--nvalid-passports (day4--get-passports day4-input)
+(defun day4-part1-solution nil
+  "Answer: 247."
+  (day4--nvalid-passports (day4--get-passports day4-input)
+                          day4-required-passport-fields))
 
-;;                           day4-required-passport-fields)
-;;   (dolist passport passports nvalid
-;;           (dolist (field day4-passport-fields)
-;;             )))
 
 (defun day4--get-passports (passports-string)
   "Get passports from PASSPORTS-STRING."
@@ -1221,13 +1219,13 @@ byr:1959")
     (split-string passports-string "\n\n")))
 
 
-(defun day4--nvalid-pasports (passports &optional required-passport-fields)
+(defun day4--nvalid-passports (passports &optional required-passport-fields)
   "Get number of valid passports in PASSPORTS based on REQUIRED-PASSPORT-FIELDS."
   (let ((required-passport-fields (or required-passport-fields
                                       day4-required-passport-fields))
         (nvalid 0))
     (dolist (passport passports nvalid)
-      (when (day-4--passport-valid-p passport required-passport-fields)
+      (when (day4--passport-valid-p passport required-passport-fields)
         (setq nvalid (+ 1 nvalid))))))
 
 
