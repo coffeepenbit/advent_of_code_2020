@@ -1212,14 +1212,21 @@ byr:1959")
 
 (defun valid-height-p (value)
   "Check if VALUE is valid."
-  ;; TODO
-  )
+  (cond ((string-match-p "cm" value)
+         (let ((height (string-to-number (substring value 0 -2))))
+           (and (>= height 150)
+                (<= height 193))))
+        ((string-match-p "in" value)
+         (let ((height (string-to-number (substring value 0 -2))))
+           (and (>= height 59)
+                (<= height 76))))
+        (t nil)))
 
 
-(defun valid-hair-color-p (value)
-  "Check if VALUE is valid."
-  ;; TODO
-  )
+        (defun valid-hair-color-p (value)
+          "Check if VALUE is valid."
+          ;; TODO
+          )
 
 
 (defun valid-eye-color-p (value)

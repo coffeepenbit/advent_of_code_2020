@@ -103,9 +103,16 @@ hgt:181 cid:166"))
   (should (equal nil (valid-expiration-year-p 2031))))
 
 
-;; (ert-deftest valid-height-p nil
-;;   )
-
+(ert-deftest valid-height-p nil
+  (should (equal nil (valid-height-p "149cm")))
+  (should (equal t (valid-height-p "150cm")))
+  (should (equal t (valid-height-p "193cm")))
+  (should (equal nil (valid-height-p "194cm")))
+  (should (equal nil (valid-height-p "58in")))
+  (should (equal t (valid-height-p "59in")))
+  (should (equal t (valid-height-p "76in")))
+  (should (equal nil (valid-height-p "77in")))
+  (should (equal nil (valid-height-p "76"))))
 
 ;; (ert-deftest valid-hair-color-p nil
 ;;   )
