@@ -82,5 +82,43 @@ hgt:181 cid:166"))
     (should (equal nil (day4--passport-valid-p passport)))))
 
 
+(ert-deftest valid-birth-year-p nil
+  (should (equal nil (valid-birth-year-p 1919)))
+  (should (equal t (valid-birth-year-p 1920)))
+  (should (equal t (valid-birth-year-p 2002)))
+  (should (equal nil (valid-birth-year-p 2003))))
+
+
+(ert-deftest valid-issue-year-p nil
+  (should (equal nil (valid-issue-year-p 2009)))
+  (should (equal t (valid-issue-year-p 2010)))
+  (should (equal t (valid-issue-year-p 2020)))
+  (should (equal nil (valid-issue-year-p 2021))))
+
+
+(ert-deftest valid-expiration-year-p nil
+  (should (equal nil (valid-expiration-year-p 2019)))
+  (should (equal t (valid-expiration-year-p 2020)))
+  (should (equal t (valid-expiration-year-p 2030)))
+  (should (equal nil (valid-expiration-year-p 2031))))
+
+
+;; (ert-deftest valid-height-p nil
+;;   )
+
+
+;; (ert-deftest valid-hair-color-p nil
+;;   )
+
+
+;; (ert-deftest valid-eye-color-p nil
+;;   )
+
+
+;; (ert-deftest valid-passport-p nil
+;;   )
+
+
+
 (provide 'test-day4)
 ;;; test-day4.el ends here

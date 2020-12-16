@@ -1,4 +1,3 @@
-
 ;;; day4.el --- Day 4 Advent of Code 2020
 
 ;; Copyright (C) 2020  coffeepenbit
@@ -22,8 +21,6 @@
 ;;; Commentary:
 
 ;;; Code:
-
-
 (defvar day4-input "byr:2024 iyr:2016
 eyr:2034 ecl:zzz pid:985592671 hcl:033b48
 hgt:181 cid:166
@@ -1195,14 +1192,56 @@ hgt:160cm hcl:#c0946f
 byr:1959")
 
 
-(defvar day4-required-passport-fields '("byr" ; (Birth Year)
-                                        "iyr" ; (Issue Year)
-                                        "eyr" ; (Expiration Year)
-                                        "hgt" ; (Height)
-                                        "hcl" ; (Hair Color)
-                                        "ecl" ; (Eye Color)
-                                        "pid")) ; (Passport ID)
+(defun valid-birth-year-p (value)
+  "Check if VALUE is valid."
+  (and (>= value 1920)
+       (<= value 2002)))
 
+
+(defun valid-issue-year-p (value)
+  "Check if VALUE is valid."
+  (and (>= value 2010)
+       (<= value 2020)))
+
+
+(defun valid-expiration-year-p (value)
+  "Check if VALUE is valid."
+  (and (>= value 2020)
+       (<= value 2030)))
+
+
+(defun valid-height-p (value)
+  "Check if VALUE is valid."
+  ;; TODO
+  )
+
+
+(defun valid-hair-color-p (value)
+  "Check if VALUE is valid."
+  ;; TODO
+  )
+
+
+(defun valid-eye-color-p (value)
+  "Check if VALUE is valid."
+  ;; TODO
+  (string-split "amb blu brn gry grn hzl oth"))
+
+
+(defun valid-passport-p (value)
+  "Check if VALUE is valid."
+  t ; Always true
+  )
+
+
+(defvar day4-required-passport-fields
+  '((byr . 'valid-birth-year-p)
+    (iyr . 'valid-issue-year-p)
+    (eyr . 'valid-expiration-year-p)
+    (hgt . 'valid-height-p)
+    (hcl . 'valid-hair-color-p)
+    (ecl . 'valid-eye-color-p)
+    (pid . 'valid-passport-p)))
 
 (defvar day4-optional-passport-fields "cid") ; (Country ID)
 
@@ -1234,7 +1273,8 @@ byr:1959")
   (let ((required-passport-fields (or required-passport-fields
                                       day4-required-passport-fields))
         (nrequired-fields-present 0))
-    (every 'identity (mapcar (lambda (field) (string-match-p field passport))
+    (every 'identity (mapcar (lambda (field) (string-match-p (symbol-name (car field))
+                                                             passport))
                              required-passport-fields))))
 
 
