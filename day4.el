@@ -1280,11 +1280,29 @@ byr:1959")
 (defun day4--passport-valid-p (passport &optional required-passport-fields)
   "Determine if PASSPORT is valid baed on REQUIRED-PASSPORT-FIELDS."
   (let ((required-passport-fields (or required-passport-fields
-                                      day4-required-passport-fields))
-        (nrequired-fields-present 0))
-    (every 'identity (mapcar (lambda (field) (string-match-p (symbol-name (car field))
-                                                             passport))
+                                      day4-required-passport-fields)))
+    (every 'identity (mapcar (lambda (field)
+                               (day4--passport-field-is-valid field
+                                                              passport))
                              required-passport-fields))))
+;; (let ((field-value (day4--passport-field-value field
+;;                                                passport)))
+
+;;   )
+;; ;; (let ((field-name (symbol-name (car field)))
+;;       (field-validator (cdr field)))
+;;   (and (string-match-p field-name passport)
+;;        (field-validator passport))
+;; required-passport-fields)))))
+
+
+(defun day4--passport-field-name-value-pair (field passport)
+  "Get PASSPORT FIELD and its value."
+  (let ((regex-string (format "\\(%s\\):\\([a-zA-Z0-9]*\\)" field)))
+    (when (string-match regex-string passport)
+      (let* ((field-name (intern (match-string 1 passport)))
+             (field-value (match-string 2 passport)))
+        `(,field-name . ,field-value)))))
 
 
 (provide 'day4)

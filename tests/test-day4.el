@@ -82,6 +82,12 @@ hgt:181 cid:166"))
     (should (equal nil (day4--passport-valid-p passport)))))
 
 
+(ert-deftest test-day4--passport-field-name-value-pair nil
+  (let ((passport "byr:2024 iyr:2016 hgt:181 cid:166"))
+    (should (equal '(hgt . "181") (day4--passport-field-name-value-pair "hgt" passport)))
+    (should (equal nil (day4--passport-field-name-value-pair "junk" passport)))))
+
+
 (ert-deftest valid-birth-year-p nil
   (should (equal nil (valid-birth-year-p 1919)))
   (should (equal t (valid-birth-year-p 1920)))
