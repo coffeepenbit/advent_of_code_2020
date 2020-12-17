@@ -114,16 +114,20 @@ hgt:181 cid:166"))
   (should (equal nil (valid-height-p "77in")))
   (should (equal nil (valid-height-p "76"))))
 
-;; (ert-deftest valid-hair-color-p nil
-;;   )
+
+(ert-deftest valid-hair-color-p nil
+  (should (equal t (valid-hair-color-p "#c0946f")))
+  (should (equal nil (valid-hair-color-p "#c0946f1"))))
 
 
-;; (ert-deftest valid-eye-color-p nil
-;;   )
+(ert-deftest valid-eye-color-p nil
+  (should (equal t (valid-eye-color-p "amb")))
+  (should (equal nil (valid-eye-color-p "amber"))))
 
 
-;; (ert-deftest valid-passport-p nil
-;;   )
+(ert-deftest valid-passport-id-p nil
+  (should (equal t (valid-passport-id-p "000000001")))
+  (should (equal nil (valid-passport-id-p "0123456789"))))
 
 
 

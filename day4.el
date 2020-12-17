@@ -1223,23 +1223,23 @@ byr:1959")
         (t nil)))
 
 
-        (defun valid-hair-color-p (value)
-          "Check if VALUE is valid."
-          ;; TODO
-          )
+(defun valid-hair-color-p (value)
+  "Check if VALUE is valid." ; TODO
+  (not (null (string-match-p "^#[a-z0-9]\\{6\\}$" value))))
 
 
 (defun valid-eye-color-p (value)
+  "Check if VALUE is valid." ; TODO
+  (let ((valid-colors (split-string "amb blu brn gry grn hzl oth")))
+    (not (null (some 'identity (mapcar (lambda (valid-color)
+                                         (string-match-p (downcase valid-color)
+                                                         (downcase value)))
+                                       valid-colors))))))
+
+
+(defun valid-passport-id-p (value)
   "Check if VALUE is valid."
-  ;; TODO
-  (string-split "amb blu brn gry grn hzl oth"))
-
-
-(defun valid-passport-p (value)
-  "Check if VALUE is valid."
-  t ; Always true
-  )
-
+  (not (null (string-match-p  value))))
 
 (defvar day4-required-passport-fields
   '((byr . 'valid-birth-year-p)
@@ -1248,7 +1248,8 @@ byr:1959")
     (hgt . 'valid-height-p)
     (hcl . 'valid-hair-color-p)
     (ecl . 'valid-eye-color-p)
-    (pid . 'valid-passport-p)))
+    (pid . 'valid-passport-id-p)))
+
 
 (defvar day4-optional-passport-fields "cid") ; (Country ID)
 
