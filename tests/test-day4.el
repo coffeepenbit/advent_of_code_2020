@@ -130,6 +130,5 @@ hgt:181 cid:166"))
   (should (equal nil (valid-passport-id-p "0123456789"))))
 
 
-
 (provide 'test-day4)
 ;;; test-day4.el ends here

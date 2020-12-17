@@ -1232,14 +1232,15 @@ byr:1959")
   "Check if VALUE is valid."
   (let ((valid-colors (split-string "amb blu brn gry grn hzl oth")))
     (not (null (some 'identity (mapcar (lambda (valid-color)
-                                         (string-match-p (downcase valid-color)
-                                                         (downcase value)))
+                                         (string= (downcase valid-color)
+                                                  (downcase value)))
                                        valid-colors))))))
 
 
 (defun valid-passport-id-p (value)
   "Check if VALUE is valid."
   (not (null (string-match-p "^[0-9]\\{9\\}$" value))))
+
 
 (defvar day4-required-passport-fields
   '((byr . 'valid-birth-year-p)
