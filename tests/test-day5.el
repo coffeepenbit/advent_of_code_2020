@@ -25,6 +25,23 @@
 (load-file "../day5.el")
 
 
+(ert-deftest test-day-5--boarding-passes nil
+  (let ((boarding-passes-string "BFFBFBBRLR
+FFFFBBBLRR"))
+    (should (equal '("BFFBFBBRLR" "FFFFBBBLRR") (day5--boarding-passes boarding-passes-string)))))
+
+
+(ert-deftest test-day5--seat-row nil
+  (should (equal nil (day5--seat-row "BFFBFBBRLR"))))
+
+
+(ert-deftest test-day5--seat-column nil
+  (should (equal nil (day5--seat-column "BFFBFBBRLR"))))
+
+
+(ert-deftest test-day5--seat-id nil
+  (should (equal 0 (day5--seat-id 0 0)))
+  (should (equal 18 (day5--seat-id 2 2))))
 
 
 (provide 'test-day5)
