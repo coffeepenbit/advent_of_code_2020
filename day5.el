@@ -903,11 +903,27 @@ FBFFBFFLLL")
 ROW-RANGE and COLUMN-RANGE are the range of possible rows and columns."
   (cond ((null boarding-pass) ; Return
          '((car row-range) (car column-range)))
-        ((member (acar boarding-pass) '("FB")) ; Row instruction
-         (day5--seat-row-column boarding-pass row-range column-range))
-        ((member (acar boarding-pass) '("LR")) ; Column instruction
-         (day5--seat-row-column boarding-pass row-range column-range))))
+        ((member (car boarding-pass) '("FB")) ; Row instruction
+         (day5--seat-row-column (cdr boarding-pass) row-range column-range))
+        ((member (car boarding-pass) '("LR")) ; Column instruction
+         (day5--seat-row-column (cdr boarding-pass) row-range column-range))))
 
+
+(defun day5--halve-range (range side)
+  "Halve RANGE.
+
+SIDE must be 'low or 'high."
+  (cond ((equal 'low side)
+         `(,(nth 0 range)
+           ,(floor (day5--range-midpoint range))))
+        ((equal 'high side)
+         `(,(ceiling (day5--range-midpoint range))
+           ,(nth 1 range)))))
+
+
+(defun day5--range-midpoint (range)
+  "Calculate midpoint of RANGE."
+  (+ (nth 0 range) (/ (- (nth 1 range) (nth 0 range)) 2.0)))
 
 
 (defun day5--seat-id (row column)

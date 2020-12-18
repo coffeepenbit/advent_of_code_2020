@@ -21,7 +21,8 @@
 ;;; Commentary:
 
 ;;; Code:
-(unload-feature 'day5)
+(when (featurep 'day5)
+  (unload-feature 'day5))
 (load-file "../day5.el")
 
 
@@ -38,6 +39,22 @@ FFFFBBBLRR"))
         (column-range '(2 2))
         (boarding-pass ""))
     (should (equal '(0 0) (day5--seat-row-column boarding-pass row-range column-range)))))
+
+
+(ert-deftest test-day5--halve-range nil
+  (should (equal '(10 10) (day5--halve-range '(10 10) 'low)))
+  (should (equal '(10 10) (day5--halve-range '(10 10) 'high)))
+  (should (equal '(0 7) (day5--halve-range '(0 15) 'low)))
+  (should (equal '(4 7) (day5--halve-range '(0 7) 'high)))
+  (should (equal '(4 5) (day5--halve-range '(4 7) 'low)))
+  (should (equal '(6 7) (day5--halve-range '(4 7) 'high)))
+  (should (equal '(6 6) (day5--halve-range '(6 7) 'low)))
+  (should (equal '(7 7) (day5--halve-range '(6 7) 'high))))
+
+
+(ert-deftest test-day5--range-midpoint nil
+  (should (equal 3.5 (day5--range-midpoint '(0 7))))
+  (should (equal 5.5 (day5--range-midpoint '(4 7)))))
 
 
 (ert-deftest test-day5--seat-id nil
