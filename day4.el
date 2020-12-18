@@ -1194,40 +1194,45 @@ byr:1959")
 
 (defun valid-birth-year-p (value)
   "Check if VALUE is valid."
-  (let ((value (string-to-number value)))
-    (and (>= value 1920)
-         (<= value 2002))))
+  (ignore-errors
+    (let ((value (string-to-number value)))
+      (and (>= value 1920)
+           (<= value 2002)))))
 
 
 (defun valid-issue-year-p (value)
   "Check if VALUE is valid."
-  (let ((value (string-to-number value)))
-    (and (>= value 2010)
-         (<= value 2020))))
+  (ignore-errors
+    (let ((value (string-to-number value)))
+      (and (>= value 2010)
+           (<= value 2020)))))
 
 
 (defun valid-expiration-year-p (value)
   "Check if VALUE is valid."
-  (let ((value (string-to-number value)))
-    (and (>= value 2020)
-         (<= value 2030))))
+  (ignore-errors
+    (let ((value (string-to-number value)))
+      (and (>= value 2020)
+           (<= value 2030)))))
 
 
 (defun valid-height-p (value)
   "Check if VALUE is valid."
-  (cond ((string-match-p "cm" value)
-         (let ((height (string-to-number (substring value 0 -2))))
-           (and (>= height 150)
-                (<= height 193))))
-        ((string-match-p "in" value)
-         (let ((height (string-to-number (substring value 0 -2))))
-           (and (>= height 59)
-                (<= height 76))))
-        (t nil)))
+  (ignore-errors
+    (cond ((string-match-p "cm" value)
+           (let ((height (string-to-number (substring value 0 -2))))
+             (and (>= height 150)
+                  (<= height 193))))
+          ((string-match-p "in" value)
+           (let ((height (string-to-number (substring value 0 -2))))
+             (and (>= height 59)
+                  (<= height 76))))
+          (t nil))))
 
 
 (defun valid-hair-color-p (value)
   "Check if VALUE is valid."
+
   (not (null (string-match-p "^#[a-z0-9]\\{6\\}$" value))))
 
 
@@ -1246,13 +1251,13 @@ byr:1959")
 
 
 (defvar day4-required-passport-fields
-  '((byr . 'valid-birth-year-p)
-    (iyr . 'valid-issue-year-p)
-    (eyr . 'valid-expiration-year-p)
-    (hgt . 'valid-height-p)
-    (hcl . 'valid-hair-color-p)
-    (ecl . 'valid-eye-color-p)
-    (pid . 'valid-passport-id-p)))
+  '((byr . valid-birth-year-p)
+    (iyr . valid-issue-year-p)
+    (eyr . valid-expiration-year-p)
+    (hgt . valid-height-p)
+    (hcl . valid-hair-color-p)
+    (ecl . valid-eye-color-p)
+    (pid . valid-passport-id-p)))
 
 
 (defvar day4-optional-passport-fields "cid") ; (Country ID)
@@ -1285,8 +1290,7 @@ byr:1959")
   (let ((required-passport-fields (or required-passport-fields
                                       day4-required-passport-fields)))
     (every 'identity (mapcar  (lambda (field-and-validator)
-                                (day4--passport-field-valid-p
-                                 field-and-validator passport))
+                                (day4--passport-field-valid-p field-and-validator passport))
                               required-passport-fields))))
 
 
@@ -1294,14 +1298,26 @@ byr:1959")
   "Check if PASSPORT's field is valid with FIELD-AND-VALIDATOR."
   (let* ((field-symbol (car field-and-validator))
          (field-validator (cdr field-and-validator))
+
          ;; Following extracted from passport
          (field-name-value-pair (day4--passport-field-name-value-pair field-symbol passport))
          (field-name-from-passport (car field-name-value-pair))
-         (field-value-from-passport (cdr field-name-value-pair)))
+         (field-value-from-passport (cdr field-name-value-pair))
+
+         (field-value-valid-p (funcall field-validator field-value-from-passport)))
     ;; For a passport's field to be valid, it must be both present and satsify
     ;; its validator function.
-    (and field-name-from-passport
-         (funcall field-validator field-value-from-passport))))
+    (cond ((and field-name-from-passport
+                (funcall field-validator field-value-from-passport))
+           t)
+          ((null field-name-from-passport)
+           (progn
+             (message "%s not found in passport." field-symbol)
+             nil))
+          ((null field-value-valid-p)
+           (progn
+             (message "value %s not valid for %s." field-value-from-passport field-symbol)
+             nil)))))
 
 
 (defun day4--passport-field-name-value-pair (field passport)
