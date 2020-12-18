@@ -26,6 +26,10 @@
 (load-file "../day5.el")
 
 
+(ert-deftest test-day5-part1-solution nil
+  (should (equal 1 (day5-part1-solution))))
+
+
 (ert-deftest test-day-5--boarding-passes nil
   (let ((boarding-passes-string "BFFBFBBRLR
 FFFFBBBLRR"))
@@ -37,8 +41,16 @@ FFFFBBBLRR"))
 (ert-deftest test-day5--seat-row-column nil
   (let ((row-range '(1 1))
         (column-range '(2 2))
-        (boarding-pass ""))
-    (should (equal '(0 0) (day5--seat-row-column boarding-pass row-range column-range)))))
+        (boarding-pass nil))
+    (should (equal '(1 2) (day5--seat-row-column boarding-pass
+                                                 row-range
+                                                 column-range))))
+  (let ((row-range '(0 127))
+        (column-range '(0 7))
+        (boarding-pass '(?B ?F ?F ?B ?F ?B ?B ?R ?L ?R)))
+    (should (equal '(75 5) (day5--seat-row-column boarding-pass
+                                                  row-range
+                                                  column-range)))))
 
 
 (ert-deftest test-day5--halve-range nil
@@ -58,8 +70,9 @@ FFFFBBBLRR"))
 
 
 (ert-deftest test-day5--seat-id nil
-  (should (equal 0 (day5--seat-id 0 0)))
-  (should (equal 18 (day5--seat-id 2 2))))
+  (should (equal 0 (day5--seat-id '(0 0))))
+  (should (equal 18 (day5--seat-id '(2 2))))
+  (should (equal 605 (day5--seat-id '(75 5)))))
 
 
 (provide 'test-day5)

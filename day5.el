@@ -877,19 +877,23 @@ FBFFBFFLLL")
 
 
 (defvar day5-range-of-rows
-  '(0 . 127))
+  '(0 127))
 
 
 (defvar day5-range-of-columns
-  '(0 . 7))
+  '(0 7))
 
 
 (defun day5-part1-solution nil
   "Answer ."
   (interactive)
   (let ((seat-ids (list)))
-    (dolist (boarding-pass (day5--boarding-passes day5-input) seat-ids)
-      (push seat-ids (day5--seat-id boarding-pass))))) ; TODO splat arguments
+    (dolist (boarding-pass (day5--boarding-passes day5-input))
+      (push (day5--seat-id (day5--seat-row-column boarding-pass
+                                                  day5-range-of-rows
+                                                  day5-range-of-columns))
+            seat-ids))
+    (car (sort seat-ids '>))))
 
 
 (defun day5--boarding-passes (boarding-passes-string)
@@ -902,11 +906,23 @@ FBFFBFFLLL")
 
 ROW-RANGE and COLUMN-RANGE are the range of possible rows and columns."
   (cond ((null boarding-pass) ; Return
-         '((car row-range) (car column-range)))
-        ((member (car boarding-pass) '("FB")) ; Row instruction
-         (day5--seat-row-column (cdr boarding-pass) row-range column-range))
-        ((member (car boarding-pass) '("LR")) ; Column instruction
-         (day5--seat-row-column (cdr boarding-pass) row-range column-range))))
+         `(,(car row-range) ,(car column-range)))
+        ((eq (car boarding-pass) ?F) ; Forward
+         (day5--seat-row-column (cdr boarding-pass)
+                                (day5--halve-range row-range 'low)
+                                column-range))
+        ((eq (car boarding-pass) ?B) ; Backward
+         (day5--seat-row-column (cdr boarding-pass)
+                                (day5--halve-range row-range 'high)
+                                column-range))
+        ((eq (car boarding-pass) ?L) ; Left
+         (day5--seat-row-column (cdr boarding-pass)
+                                row-range
+                                (day5--halve-range column-range 'low)))
+        ((eq (car boarding-pass) ?R) ; Right
+         (day5--seat-row-column (cdr boarding-pass)
+                                row-range
+                                (day5--halve-range column-range 'high)))))
 
 
 (defun day5--halve-range (range side)
@@ -926,9 +942,11 @@ SIDE must be 'low or 'high."
   (+ (nth 0 range) (/ (- (nth 1 range) (nth 0 range)) 2.0)))
 
 
-(defun day5--seat-id (row column)
+(defun day5--seat-id (row-column)
   "Get seat-id from ROW and COLUMN."
-  (+ (* row 8) column))
+  (let ((row (car row-column))
+        (column (cadr row-column)))
+    (+ (* row 8) column)))
 
 
 (provide 'day5)
