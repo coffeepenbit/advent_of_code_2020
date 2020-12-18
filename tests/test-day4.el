@@ -76,7 +76,7 @@ hcl:cfb18a eyr:1947
 byr:2020 ecl:zzz iyr:2029"))
     (should (equal nil (day4--passport-valid-p passport))))
   (let ((passport "byr:2002 iyr:2016
-eyr:2015 ecl:amb pid:123456789 hcl:#033b48
+eyr:2025 ecl:amb pid:123456789 hcl:#033b48
 hgt:181cm cid:166"))
     (should (equal t (day4--passport-valid-p passport))))
   (let ((passport "byr:2024 iyr:2016 hgt:181 cid:166"))

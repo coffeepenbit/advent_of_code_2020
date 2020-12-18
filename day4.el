@@ -1232,22 +1232,24 @@ byr:1959")
 
 (defun valid-hair-color-p (value)
   "Check if VALUE is valid."
-
-  (not (null (string-match-p "^#[a-z0-9]\\{6\\}$" value))))
+  (ignore-errors
+    (not (null (string-match-p "^#[a-z0-9]\\{6\\}$" value)))))
 
 
 (defun valid-eye-color-p (value)
   "Check if VALUE is valid."
-  (let ((valid-colors (split-string "amb blu brn gry grn hzl oth")))
-    (not (null (some 'identity (mapcar (lambda (valid-color)
-                                         (string= (downcase valid-color)
-                                                  (downcase value)))
-                                       valid-colors))))))
+  (ignore-errors
+    (let ((valid-colors (split-string "amb blu brn gry grn hzl oth")))
+      (not (null (some 'identity (mapcar (lambda (valid-color)
+                                           (string= (downcase valid-color)
+                                                    (downcase value)))
+                                         valid-colors)))))))
 
 
 (defun valid-passport-id-p (value)
   "Check if VALUE is valid."
-  (not (null (string-match-p "^[0-9]\\{9\\}$" value))))
+  (ignore-errors
+    (not (null (string-match-p "^[0-9]\\{9\\}$" value)))))
 
 
 (defvar day4-required-passport-fields
@@ -1317,7 +1319,7 @@ byr:1959")
           ((null field-value-valid-p)
            (progn
              (message "value %s not valid for %s."
-                      (or field-value-from-passport "nil")
+                      (or (not (string= "" field-value-from-passport)) "nil")
                       field-symbol)
              nil)))))
 
