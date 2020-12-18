@@ -65,8 +65,11 @@ hcl:cfb18a eyr:1947
 byr:2020 ecl:zzz iyr:2029"
                      "ecl:gry hcl:#888785 eyr:2023 cid:63
 iyr:2019 hgt:177cm
-pid:656793259")))
-    (should (equal 2 (day4--nvalid-passports passports)))))
+pid:656793259"
+                     "byr:2002 iyr:2016
+eyr:2025 ecl:amb pid:123456789 hcl:#033b48
+hgt:181cm cid:166")))
+    (should (equal 1 (day4--nvalid-passports passports)))))
 
 
 (ert-deftest test-day4--passport-valid-p nil
