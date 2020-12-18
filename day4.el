@@ -1268,7 +1268,8 @@ byr:1959")
 (defun day4-part1-solution nil
   "Answer: 247."
   (day4--nvalid-passports (day4--get-passports day4-input)
-                          day4-required-passport-fields))
+                          day4-required-passport-fields
+                          'no-validators))
 
 
 (defun day4--get-passports (passports-string)
@@ -1277,27 +1278,35 @@ byr:1959")
     (split-string passports-string "\n\n")))
 
 
-(defun day4--nvalid-passports (passports &optional required-passport-fields)
-  "Get number of valid passports in PASSPORTS based on REQUIRED-PASSPORT-FIELDS."
+(defun day4--nvalid-passports (passports &optional required-passport-fields no-validators)
+  "Get number of valid passports in PASSPORTS based on REQUIRED-PASSPORT-FIELDS.
+
+If NO-VALIDATORS non-nil then don't use field validators."
   (let ((required-passport-fields (or required-passport-fields
                                       day4-required-passport-fields))
         (nvalid 0))
     (dolist (passport passports nvalid)
-      (when (day4--passport-valid-p passport required-passport-fields)
+      (when (day4--passport-valid-p passport required-passport-fields no-validators)
         (setq nvalid (+ 1 nvalid))))))
 
 
-(defun day4--passport-valid-p (passport &optional required-passport-fields)
-  "Determine if PASSPORT is valid baed on REQUIRED-PASSPORT-FIELDS."
+(defun day4--passport-valid-p (passport &optional required-passport-fields no-validators)
+  "Determine if PASSPORT is valid baed on REQUIRED-PASSPORT-FIELDS.
+
+If NO-VALIDATORS non-nil then don't use field validators."
   (let ((required-passport-fields (or required-passport-fields
                                       day4-required-passport-fields)))
     (every 'identity (mapcar  (lambda (field-and-validator)
-                                (day4--passport-field-valid-p field-and-validator passport))
+                                (day4--passport-field-valid-p field-and-validator
+                                                              passport
+                                                              no-validators))
                               required-passport-fields))))
 
 
-(defun day4--passport-field-valid-p (field-and-validator passport)
-  "Check if PASSPORT's field is valid with FIELD-AND-VALIDATOR."
+(defun day4--passport-field-valid-p (field-and-validator passport &optional no-validators)
+  "Check if PASSPORT's field is valid with FIELD-AND-VALIDATOR.
+
+If NO-VALIDATORS non-nil then don't use field validators."
   (let* ((field-symbol (car field-and-validator))
          (field-validator (cdr field-and-validator))
 
@@ -1310,7 +1319,8 @@ byr:1959")
     ;; For a passport's field to be valid, it must be both present and satsify
     ;; its validator function.
     (cond ((and field-name-from-passport
-                (funcall field-validator field-value-from-passport))
+                (or (not (null no-validators))
+                    (funcall field-validator field-value-from-passport)))
            t)
           ((null field-name-from-passport)
            (progn
