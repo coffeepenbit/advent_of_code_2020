@@ -95,8 +95,9 @@ hgt:181cm cid:166"))
 
 
 (ert-deftest test-day4--passport-field-name-value-pair nil
-  (let ((passport "byr:2024 iyr:2016 hgt:181 cid:166"))
+  (let ((passport "byr:2024 iyr:2016 hgt:181 cid:166 hcl:#033b48"))
     (should (equal '(hgt . "181") (day4--passport-field-name-value-pair "hgt" passport)))
+    (should (equal '(hcl . "#033b48") (day4--passport-field-name-value-pair "hcl" passport)))
     (should (equal nil (day4--passport-field-name-value-pair "junk" passport)))))
 
 

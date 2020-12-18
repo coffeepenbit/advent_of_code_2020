@@ -1316,13 +1316,15 @@ byr:1959")
              nil))
           ((null field-value-valid-p)
            (progn
-             (message "value %s not valid for %s." field-value-from-passport field-symbol)
+             (message "value %s not valid for %s."
+                      (or field-value-from-passport "nil")
+                      field-symbol)
              nil)))))
 
 
 (defun day4--passport-field-name-value-pair (field passport)
   "Get PASSPORT FIELD and its value."
-  (let ((regex-string (format "\\(%s\\):\\([a-zA-Z0-9]*\\)" field)))
+  (let ((regex-string (format "\\(%s\\):\\([^ \n]*\\)" field)))
     (when (string-match regex-string passport)
       (let* ((field-name (intern (match-string 1 passport)))
              (field-value (match-string 2 passport)))
