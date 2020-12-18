@@ -28,15 +28,16 @@
 (ert-deftest test-day-5--boarding-passes nil
   (let ((boarding-passes-string "BFFBFBBRLR
 FFFFBBBLRR"))
-    (should (equal '("BFFBFBBRLR" "FFFFBBBLRR") (day5--boarding-passes boarding-passes-string)))))
+    (should (equal '((?B ?F ?F ?B ?F ?B ?B ?R ?L ?R)
+                     (?F ?F ?F ?F ?B ?B ?B ?L ?R ?R ))
+                   (day5--boarding-passes boarding-passes-string)))))
 
 
-(ert-deftest test-day5--seat-row nil
-  (should (equal nil (day5--seat-row "BFFBFBBRLR"))))
-
-
-(ert-deftest test-day5--seat-column nil
-  (should (equal nil (day5--seat-column "BFFBFBBRLR"))))
+(ert-deftest test-day5--seat-row-column nil
+  (let ((row-range '(1 1))
+        (column-range '(2 2))
+        (boarding-pass ""))
+    (should (equal '(0 0) (day5--seat-row-column boarding-pass row-range column-range)))))
 
 
 (ert-deftest test-day5--seat-id nil

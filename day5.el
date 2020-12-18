@@ -888,21 +888,26 @@ FBFFBFFLLL")
   "Answer ."
   (interactive)
   (let ((seat-ids (list)))
-    (dolist boarding-pass (day5--boarding-passes day5-input) seat-ids
-            (push seat-ids (day5--seat-id (day5--seat-row boarding-pass)
-                                          (day5--seat-column boarding-pass))))))
+    (dolist (boarding-pass (day5--boarding-passes day5-input) seat-ids)
+      (push seat-ids (day5--seat-id boarding-pass))))) ; TODO splat arguments
+
 
 (defun day5--boarding-passes (boarding-passes-string)
   "Parse BOARDING-PASSES-STRING for boarding passes."
-  (split-string boarding-passes-string))
+  (mapcar 'string-to-list (split-string boarding-passes-string)))
 
 
-(defun day5--seat-row (boarding-pass)
-  nil)
+(defun day5--seat-row-column (boarding-pass row-range column-range)
+  "Get row and column for BOARDING-PASS.
 
+ROW-RANGE and COLUMN-RANGE are the range of possible rows and columns."
+  (cond ((null boarding-pass) ; Return
+         '((car row-range) (car column-range)))
+        ((member (acar boarding-pass) '("FB")) ; Row instruction
+         (day5--seat-row-column boarding-pass row-range column-range))
+        ((member (acar boarding-pass) '("LR")) ; Column instruction
+         (day5--seat-row-column boarding-pass row-range column-range))))
 
-(defun day5--seat-column (boarding-pass)
-  nil)
 
 
 (defun day5--seat-id (row column)
