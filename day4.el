@@ -1194,20 +1194,23 @@ byr:1959")
 
 (defun valid-birth-year-p (value)
   "Check if VALUE is valid."
-  (and (>= value 1920)
-       (<= value 2002)))
+  (let ((value (string-to-number value)))
+    (and (>= value 1920)
+         (<= value 2002))))
 
 
 (defun valid-issue-year-p (value)
   "Check if VALUE is valid."
-  (and (>= value 2010)
-       (<= value 2020)))
+  (let ((value (string-to-number value)))
+    (and (>= value 2010)
+         (<= value 2020))))
 
 
 (defun valid-expiration-year-p (value)
   "Check if VALUE is valid."
-  (and (>= value 2020)
-       (<= value 2030)))
+  (let ((value (string-to-number value)))
+    (and (>= value 2020)
+         (<= value 2030))))
 
 
 (defun valid-height-p (value)
@@ -1281,19 +1284,24 @@ byr:1959")
   "Determine if PASSPORT is valid baed on REQUIRED-PASSPORT-FIELDS."
   (let ((required-passport-fields (or required-passport-fields
                                       day4-required-passport-fields)))
-    (every 'identity (mapcar (lambda (field)
-                               (day4--passport-field-is-valid field
-                                                              passport))
-                             required-passport-fields))))
-;; (let ((field-value (day4--passport-field-value field
-;;                                                passport)))
+    (every 'identity (mapcar  (lambda (field-and-validator)
+                                (day4--passport-field-valid-p
+                                 field-and-validator passport))
+                              required-passport-fields))))
 
-;;   )
-;; ;; (let ((field-name (symbol-name (car field)))
-;;       (field-validator (cdr field)))
-;;   (and (string-match-p field-name passport)
-;;        (field-validator passport))
-;; required-passport-fields)))))
+
+(defun day4--passport-field-valid-p (field-and-validator passport)
+  "Check if PASSPORT's field is valid with FIELD-AND-VALIDATOR."
+  (let* ((field-symbol (car field-and-validator))
+         (field-validator (cdr field-and-validator))
+         ;; Following extracted from passport
+         (field-name-value-pair (day4--passport-field-name-value-pair field-symbol passport))
+         (field-name-from-passport (car field-name-value-pair))
+         (field-value-from-passport (cdr field-name-value-pair)))
+    ;; For a passport's field to be valid, it must be both present and satsify
+    ;; its validator function.
+    (and field-name-from-passport
+         (funcall field-validator field-value-from-passport))))
 
 
 (defun day4--passport-field-name-value-pair (field passport)

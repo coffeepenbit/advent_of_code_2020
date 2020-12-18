@@ -82,6 +82,17 @@ hgt:181 cid:166"))
     (should (equal nil (day4--passport-valid-p passport)))))
 
 
+(ert-deftest test-day4--passport-field-valid-p nil
+  (let ((passport "byr:2024 iyr:2016 hgt:181 cid:166"))
+    (let ((field-and-validator '(non-existant-field . on-existant-validator-p)))
+      (should (equal nil (day4--passport-field-valid-p field-and-validator passport))))
+    (let ((field-and-validator '(iyr . valid-issue-year-p)))
+      (should (equal t (day4--passport-field-valid-p field-and-validator passport)))))
+  (let ((passport "byr:2024 iyr:2050 hgt:181 cid:166"))
+    (let ((field-and-validator '(iyr . valid-issue-year-p)))
+      (should (equal nil (day4--passport-field-valid-p field-and-validator passport))))))
+
+
 (ert-deftest test-day4--passport-field-name-value-pair nil
   (let ((passport "byr:2024 iyr:2016 hgt:181 cid:166"))
     (should (equal '(hgt . "181") (day4--passport-field-name-value-pair "hgt" passport)))
@@ -89,24 +100,24 @@ hgt:181 cid:166"))
 
 
 (ert-deftest valid-birth-year-p nil
-  (should (equal nil (valid-birth-year-p 1919)))
-  (should (equal t (valid-birth-year-p 1920)))
-  (should (equal t (valid-birth-year-p 2002)))
-  (should (equal nil (valid-birth-year-p 2003))))
+  (should (equal nil (valid-birth-year-p "1919")))
+  (should (equal t (valid-birth-year-p "1920")))
+  (should (equal t (valid-birth-year-p "2002")))
+  (should (equal nil (valid-birth-year-p "2003"))))
 
 
 (ert-deftest valid-issue-year-p nil
-  (should (equal nil (valid-issue-year-p 2009)))
-  (should (equal t (valid-issue-year-p 2010)))
-  (should (equal t (valid-issue-year-p 2020)))
-  (should (equal nil (valid-issue-year-p 2021))))
+  (should (equal nil (valid-issue-year-p "2009")))
+  (should (equal t (valid-issue-year-p "2010")))
+  (should (equal t (valid-issue-year-p "2020")))
+  (should (equal nil (valid-issue-year-p "2021"))))
 
 
 (ert-deftest valid-expiration-year-p nil
-  (should (equal nil (valid-expiration-year-p 2019)))
-  (should (equal t (valid-expiration-year-p 2020)))
-  (should (equal t (valid-expiration-year-p 2030)))
-  (should (equal nil (valid-expiration-year-p 2031))))
+  (should (equal nil (valid-expiration-year-p "2019")))
+  (should (equal t (valid-expiration-year-p "2020")))
+  (should (equal t (valid-expiration-year-p "2030")))
+  (should (equal nil (valid-expiration-year-p "2031"))))
 
 
 (ert-deftest valid-height-p nil
