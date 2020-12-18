@@ -1267,6 +1267,7 @@ byr:1959")
 
 (defun day4-part1-solution nil
   "Answer: 247."
+  (interactive)
   (day4--nvalid-passports (day4--get-passports day4-input)
                           day4-required-passport-fields
                           'no-validators))
@@ -1329,7 +1330,7 @@ If NO-VALIDATORS non-nil then don't use field validators."
           ((null field-value-valid-p)
            (progn
              (message "value %s not valid for %s."
-                      (or (not (string= "" field-value-from-passport)) "nil")
+                      (or field-value-from-passport "nil")
                       field-symbol)
              nil)))))
 
@@ -1341,6 +1342,13 @@ If NO-VALIDATORS non-nil then don't use field validators."
       (let* ((field-name (intern (match-string 1 passport)))
              (field-value (match-string 2 passport)))
         `(,field-name . ,field-value)))))
+
+
+(defun day4-part2-solution nil
+  "Answer: 145."
+  (interactive)
+  (day4--nvalid-passports (day4--get-passports day4-input)
+                          day4-required-passport-fields))
 
 
 (provide 'day4)
