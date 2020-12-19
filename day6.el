@@ -2263,11 +2263,11 @@ tdjwzsaqhxunkfcvpbrmgil")
 
 
 (defun day6-part1-solution nil
-  "Answer: ."
+  "Answer: 6930."
   (interactive)
   (let ((nunique-answers (list)))
-    (dolist (group-answers (day6--all-group-answers day6-input))
-      (push (day6--unique-group-answers group-answers) nunique-answers))))
+    (dolist (group-answers (day6--all-group-answers day6-input) (apply '+ nunique-answers))
+      (push (length (day6--unique-group-answers group-answers)) nunique-answers))))
 
 
 (defun day6-part2-solution nil
@@ -2277,9 +2277,17 @@ tdjwzsaqhxunkfcvpbrmgil")
 
 (defun day6--all-group-answers (answer-string-input)
   "Get group answers from ANSWER-STRING-INPUT."
-  (split-string answer-string-inputu "\n\n"))
+  (mapcar 'string-to-list
+          (mapcar (lambda (string)
+                    (replace-regexp-in-string "\n"
+                                              ""
+                                              string))
+                  (split-string answer-string-input "\n\n"))))
 
 
+(defun day6--unique-group-answers (group-answers)
+  "Get a single groups' answers from GROUP-ANSWERS."
+  (delete-dups group-answers))
 
 
 (provide 'day6)

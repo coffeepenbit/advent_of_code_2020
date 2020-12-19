@@ -24,9 +24,26 @@
 ;; Reset day6.
 (when (featurep 'day6)
   (unload-feature 'day6))
+(when (featurep 'test-day6)
+  (progn (ert-delete-all-tests)
+         (unload-feature 'test-day6)))
 (load-file "../day6.el")
 
 
+(ert-deftest test-day6-part1-solution nil
+  (should (equal 6930 (day6-part1-solution))))
+
+
+(ert-deftest test-day6--all-group-answers nil
+  (let ((answer-string "abc
+
+xyz
+qwe"))
+    (should (equal '((?a ?b ?c) (?x ?y ?z ?q ?w ?e)) (day6--all-group-answers answer-string)))))
+
+
+(ert-deftest test-day6--unique-group-answers nil
+  (should (equal '(?A ?B) (day6--unique-group-answers '(?A ?B ?A)))))
 
 
 (provide 'test-day6)
