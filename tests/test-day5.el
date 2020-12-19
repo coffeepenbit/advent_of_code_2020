@@ -1,4 +1,4 @@
-;;; test-day5.el --- Day 4 Advent of Code 2020
+;;; test-day5.el --- Day 5 Advent of Code 2020
 
 ;; Copyright (C) 2020  coffeepenbit
 
