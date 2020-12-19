@@ -21,6 +21,7 @@
 ;;; Commentary:
 
 ;;; Code:
+;; Reset day6.
 (when (featurep 'day6)
   (unload-feature 'day6))
 (load-file "../day6.el")
