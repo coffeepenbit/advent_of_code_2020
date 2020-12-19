@@ -2266,7 +2266,7 @@ tdjwzsaqhxunkfcvpbrmgil")
   "Answer: 6930."
   (interactive)
   (let ((nunique-answers (list)))
-    (dolist (group-answers (day6--all-group-answers day6-input) (apply '+ nunique-answers))
+    (dolist (group-answers (day6--part1-all-group-answers day6-input) (apply '+ nunique-answers))
       (push (length (day6--unique-group-answers group-answers)) nunique-answers))))
 
 
@@ -2275,19 +2275,41 @@ tdjwzsaqhxunkfcvpbrmgil")
   (interactive))
 
 
-(defun day6--all-group-answers (answer-string-input)
+(defun day6--part1-all-group-answers (answer-string-input)
   "Get group answers from ANSWER-STRING-INPUT."
   (mapcar 'string-to-list
           (mapcar (lambda (string)
                     (replace-regexp-in-string "\n"
                                               ""
                                               string))
-                  (split-string answer-string-input "\n\n"))))
+                  (day6--group-strings answer-string-input))))
+
+
+(defun day6--group-strings (answer-string-input)
+  "Split ANSWER-STRING-INPUT into groups."
+  (split-string answer-string-input "\n\n"))
 
 
 (defun day6--unique-group-answers (group-answers)
   "Get a single groups' answers from GROUP-ANSWERS."
   (delete-dups group-answers))
+
+
+(defun day6--part2-all-group-answers (answer-string-input)
+  "Get group answers from ANSWER-STRING-INPUT.
+
+Further splits based on members' answers in group."
+  (let ((string-answers (day6--group-members-answers (day6--group-strings answer-string-input))))
+    (mapcar (lambda (group)
+              (mapcar 'string-to-list group))
+            string-answers)))
+
+
+  (defun day6--group-members-answers (group-strings)
+    "Separates GROUP-STRINGS into member strings."
+    (mapcar (lambda (group-string)
+              (split-string group-string "\n"))
+            group-strings))
 
 
 (provide 'day6)

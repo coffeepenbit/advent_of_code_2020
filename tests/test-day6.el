@@ -34,17 +34,37 @@
   (should (equal 6930 (day6-part1-solution))))
 
 
-(ert-deftest test-day6--all-group-answers nil
+(ert-deftest test-day6--part1-all-group-answers nil
   (let ((answer-string "abc
 
 xyz
 qwe"))
-    (should (equal '((?a ?b ?c) (?x ?y ?z ?q ?w ?e)) (day6--all-group-answers answer-string)))))
+    (should (equal '((?a ?b ?c) (?x ?y ?z ?q ?w ?e)) (day6--part1-all-group-answers answer-string)))))
+
+
+(ert-deftest test-day6--group-strings nil
+  (let ((answer-string "abc
+
+xyz
+qwe"))
+    (should (equal '("abc" "xyz\nqwe") (day6--group-strings answer-string)))))
 
 
 (ert-deftest test-day6--unique-group-answers nil
   (should (equal '(?A ?B) (day6--unique-group-answers '(?A ?B ?A)))))
 
+
+(ert-deftest test-day6--part2-all-group-answers nil
+  (let ((answer-string "abc
+
+xyz
+qwe"))
+    (should (equal '(((?a ?b ?c)) ((?x ?y ?z) (?q ?w ?e))) (day6--part2-all-group-answers answer-string)))))
+
+
+(ert-deftest test-day6--group-members-answers nil
+  (let ((group-strings '("abc" "xyz\nqwe")))
+    (should (equal '(("abc") ("xyz" "qwe")) (day6--group-members-answers group-strings)))))
 
 (provide 'test-day6)
 ;;; test-day6.el ends here
