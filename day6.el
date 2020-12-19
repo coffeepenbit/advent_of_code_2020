@@ -2305,11 +2305,29 @@ Further splits based on members' answers in group."
             string-answers)))
 
 
-  (defun day6--group-members-answers (group-strings)
-    "Separates GROUP-STRINGS into member strings."
-    (mapcar (lambda (group-string)
-              (split-string group-string "\n"))
-            group-strings))
+(defun day6--group-members-answers (group-strings)
+  "Separates GROUP-STRINGS into member strings."
+  (mapcar (lambda (group-string)
+            (split-string group-string "\n"))
+          group-strings))
+
+
+(defun day6--nintersecting-member-answers (all-group-answer)
+  "Get count of all intersecting answers from all groups in ALL-GROUP-ANSWER."
+  nil)
+
+
+(defun day6--member-answers-intersection (group-answers)
+  "Get the intersection of group members answers from a single GROUP-ANSWERS."
+  (let ((member-answers-intersection (list)))
+    (if (= 1 (length group-answers))
+        (setq member-answers-intersection (car group-answers))
+      (dotimes (member-index (- (length group-answers) 1))
+        (setq member-answers-intersection
+              (append (cl-intersection (nth member-index group-answers)
+                                       (nth (+ 1 member-index) group-answers))
+                      member-answers-intersection))))
+    (sort member-answers-intersection '<)))
 
 
 (provide 'day6)

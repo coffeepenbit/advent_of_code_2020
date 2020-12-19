@@ -66,5 +66,12 @@ qwe"))
   (let ((group-strings '("abc" "xyz\nqwe")))
     (should (equal '(("abc") ("xyz" "qwe")) (day6--group-members-answers group-strings)))))
 
+
+(ert-deftest test-day6--member-answers-intersection nil
+  (should (equal '(?a ?b ?c) (day6--member-answers-intersection '((?a ?b ?c)))))
+  (should (equal '(?a ?b) (day6--member-answers-intersection '((?a ?b ?c) (?a ?b ?d))))))
+
+
+
 (provide 'test-day6)
 ;;; test-day6.el ends here
