@@ -891,9 +891,14 @@ FBFFBFFLLL")
 
 
 (defun day5-part2-solution nil
-  "Answer: ."
+  "Answer: 623."
   (interactive)
-  (seq-max (day5--seat-ids (day5--boarding-passes day5-input))))
+  (let ((sorted-seat-ids (sort (day5--seat-ids (day5--boarding-passes day5-input)) '<)))
+    (dotimes (id-index (length sorted-seat-ids))
+      (let ((current-seat-id (nth id-index sorted-seat-ids))
+            (next-seat-id (nth (+ 1 id-index) sorted-seat-ids)))
+        (when (not (= (+ 1 current-seat-id) next-seat-id))
+          (return (+ 1 current-seat-id)))))))
 
 
 

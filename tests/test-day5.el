@@ -31,7 +31,7 @@
 
 
 (ert-deftest test-day5-part2-solution nil
-  (should (equal 885 (day5-part2-solution))))
+  (should (equal 623 (day5-part2-solution))))
 
 
 (ert-deftest test-day-5--boarding-passes nil
