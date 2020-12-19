@@ -943,7 +943,7 @@ SIDE must be 'low or 'high."
 
 
 (defun day5--seat-id (row-column)
-  "Get seat-id from ROW and COLUMN."
+  "Get seat-id from ROW-COLUMN."
   (let ((row (car row-column))
         (column (cadr row-column)))
     (+ (* row 8) column)))
