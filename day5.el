@@ -885,15 +885,26 @@ FBFFBFFLLL")
 
 
 (defun day5-part1-solution nil
-  "Answer ."
+  "Answer:  885."
   (interactive)
+  (seq-max (day5--seat-ids (day5--boarding-passes day5-input))))
+
+
+(defun day5-part2-solution nil
+  "Answer: ."
+  (interactive)
+  (seq-max (day5--seat-ids (day5--boarding-passes day5-input))))
+
+
+
+(defun day5--seat-ids (boarding-passes)
+  "Get seat-ids from BOARDING-PASSES."
   (let ((seat-ids (list)))
-    (dolist (boarding-pass (day5--boarding-passes day5-input))
+    (dolist (boarding-pass boarding-passes seat-ids)
       (push (day5--seat-id (day5--seat-row-column boarding-pass
                                                   day5-range-of-rows
                                                   day5-range-of-columns))
-            seat-ids))
-    (car (sort seat-ids '>))))
+            seat-ids))))
 
 
 (defun day5--boarding-passes (boarding-passes-string)
