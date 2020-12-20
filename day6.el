@@ -2271,7 +2271,7 @@ tdjwzsaqhxunkfcvpbrmgil")
 
 
 (defun day6-part2-solution nil
-  "Answer: 8778."
+  "Answer: 3585."
   (interactive)
   (day6--nintersecting-member-answers (day6--part2-all-group-answers day6-input)))
 
@@ -2280,9 +2280,7 @@ tdjwzsaqhxunkfcvpbrmgil")
   "Get group answers from ANSWER-STRING-INPUT."
   (mapcar 'string-to-list
           (mapcar (lambda (string)
-                    (replace-regexp-in-string "\n"
-                                              ""
-                                              string))
+                    (replace-regexp-in-string "\n" "" string))
                   (day6--group-strings answer-string-input))))
 
 
@@ -2325,23 +2323,10 @@ Further splits based on members' answers in group."
 
 (defun day6--member-answers-intersection (group-answers)
   "Get the intersection of group members answers from a single GROUP-ANSWERS."
-  (let ((member-answers-intersection (list)))
-    (if (= 1 (length group-answers))
-        (setq member-answers-intersection (car group-answers))
-      (dotimes (member-index (- (length group-answers) 1))
-        (let* ((intersection (cl-intersection (nth member-index group-answers)
-                                              (nth (+ 1
-                                                      member-index)
-                                                   group-answers)))
-               (new-intersection (seq-filter (lambda (answer)
-                                               (null
-                                                (member
-                                                 answer
-                                                 member-answers-intersection)))
-                                             intersection)))
-          (setq member-answers-intersection (append new-intersection member-answers-intersection))
-          member-answers-intersection)))
-    (sort member-answers-intersection '<)))
+  (sort (if (= 1 (length group-answers)) ; Only one member, return their answers.
+            (car group-answers)
+          (seq-reduce 'cl-intersection (cdr group-answers) (car group-answers)))
+        '<))
 
 
 (provide 'day6)

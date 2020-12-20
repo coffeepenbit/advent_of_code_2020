@@ -74,8 +74,7 @@ rtosmuxc"))
 n
 a"))
     (should (equal 0 (day6-part2-solution))))
-  (should (equal 3768 (day6-part2-solution))))
-
+  (should (equal 3585 (day6-part2-solution))))
 
 
 (ert-deftest test-day6--part1-all-group-answers nil
