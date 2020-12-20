@@ -2271,8 +2271,9 @@ tdjwzsaqhxunkfcvpbrmgil")
 
 
 (defun day6-part2-solution nil
-  "Answer: ."
-  (interactive))
+  "Answer: 8778."
+  (interactive)
+  (day6--nintersecting-member-answers (day6--part2-all-group-answers day6-input)))
 
 
 (defun day6--part1-all-group-answers (answer-string-input)
@@ -2312,9 +2313,14 @@ Further splits based on members' answers in group."
           group-strings))
 
 
-(defun day6--nintersecting-member-answers (all-group-answer)
-  "Get count of all intersecting answers from all groups in ALL-GROUP-ANSWER."
-  nil)
+(defun day6--nintersecting-member-answers (all-group-answers)
+  "Get count of all intersecting answers from all groups in ALL-GROUP-ANSWERS."
+  (let ((nintersecting-member-answers 0))
+    (dolist (group-answers all-group-answers nintersecting-member-answers)
+      (setq nintersecting-member-answers (+ nintersecting-member-answers
+                                            (length
+                                             (day6--member-answers-intersection
+                                              group-answers)))))))
 
 
 (defun day6--member-answers-intersection (group-answers)
@@ -2323,10 +2329,18 @@ Further splits based on members' answers in group."
     (if (= 1 (length group-answers))
         (setq member-answers-intersection (car group-answers))
       (dotimes (member-index (- (length group-answers) 1))
-        (setq member-answers-intersection
-              (append (cl-intersection (nth member-index group-answers)
-                                       (nth (+ 1 member-index) group-answers))
-                      member-answers-intersection))))
+        (let* ((intersection (cl-intersection (nth member-index group-answers)
+                                              (nth (+ 1
+                                                      member-index)
+                                                   group-answers)))
+               (new-intersection (seq-filter (lambda (answer)
+                                               (null
+                                                (member
+                                                 answer
+                                                 member-answers-intersection)))
+                                             intersection)))
+          (setq member-answers-intersection (append new-intersection member-answers-intersection))
+          member-answers-intersection)))
     (sort member-answers-intersection '<)))
 
 

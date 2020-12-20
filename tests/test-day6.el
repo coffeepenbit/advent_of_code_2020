@@ -33,6 +33,25 @@
 (ert-deftest test-day6-part1-solution nil
   (should (equal 6930 (day6-part1-solution))))
 
+(ert-deftest test-day6-part2-solution nil
+  (let ((day6-input "abc"))
+    (should (equal 3 (day6-part2-solution))))
+  (let ((day6-input "a
+b
+c"))
+    (should (equal 0 (day6-part2-solution))))
+  (let ((day6-input "ab
+ac"))
+    (should (equal 1 (day6-part2-solution))))
+  (let ((day6-input "a
+a
+a
+a"))
+    (should (equal 1 (day6-part2-solution))))
+  (let ((day6-input "b"))
+    (should (equal 1 (day6-part2-solution)))))
+
+
 
 (ert-deftest test-day6--part1-all-group-answers nil
   (let ((answer-string "abc
@@ -67,10 +86,16 @@ qwe"))
     (should (equal '(("abc") ("xyz" "qwe")) (day6--group-members-answers group-strings)))))
 
 
+(ert-deftest test-day6--nintersecting-member-answers nil
+  (should (equal 3 (day6--nintersecting-member-answers '(((?a ?b ?c)) ((?x ?y ?z) (?q ?w ?e))))))
+  (should (equal 5 (day6--nintersecting-member-answers '(((?a ?b ?c)) ((?a ?b ?c) (?a ?b ?d))))))
+  (should (equal 1 (day6--nintersecting-member-answers '(((?a) (?a) (?a)))))))
+
+
 (ert-deftest test-day6--member-answers-intersection nil
   (should (equal '(?a ?b ?c) (day6--member-answers-intersection '((?a ?b ?c)))))
-  (should (equal '(?a ?b) (day6--member-answers-intersection '((?a ?b ?c) (?a ?b ?d))))))
-
+  (should (equal '(?a ?b) (day6--member-answers-intersection '((?a ?b ?c) (?a ?b ?d)))))
+  (should (equal '(?a) (day6--member-answers-intersection '((?a) (?a) (?a))))))
 
 
 (provide 'test-day6)
