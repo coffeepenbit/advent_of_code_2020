@@ -622,7 +622,11 @@ shiny purple bags contain 1 shiny teal bag.")
 
 
 (defun day7-part1-solution nil
-  "Answer: .")
+  "Answer: ."
+  (let ((ngold-bags 0))
+    (dolist (bag (parse-all-bag-rules day7-input) ngold-bags))
+
+    ))
 
 
 (defun day7-part2-solution nil
@@ -642,12 +646,15 @@ shiny purple bags contain 1 shiny teal bag.")
              :documentation "Bags contained by bag.")))
 
 
-(defun bag-rules (bag-rules)
-  "Parse BAG-RULES."
-  (mapcar (lambda (bag-rule)
-            (bag :name (bag-name bag-rule)
-                 :contains (bag-contains bag-rule)))
-          (split-string bag-rules "\n")))
+(defun parse-all-bag-rules (bag-rules)
+  "Parse all BAG-RULES."
+  (mapcar 'parse-bag-rule (split-string bag-rules "\n")))
+
+
+(defun parse-bag-rule (bag-rule)
+  "Parse BAG-RULE."
+  (bag :name (bag-name bag-rule)
+       :contains (bag-contains bag-rule)))
 
 
 (defun bag-name (bag-rule)
@@ -658,19 +665,15 @@ shiny purple bags contain 1 shiny teal bag.")
 
 (defun bag-contains (bag-rule)
   "Get bag contents from BAG-RULE."
-  (let ((contained-bags (list)))
-    (when (string-match "\\(?:[0-9] \\([ a-zA-Z]*\\) bag\\)*" bag-rule)
-      (dotimes (ind (/ (length (match-data)) 2) contained-bags)
-        (push (substring bag-rule
-                         (nth (* 2 ind) (match-data))
-                         (nth (+ 1 (* 2 ind))(match-data)))
-              contained-bags)
-        ;;   (let ((counter 1)) ; Ignore first match
-        ;;     (while (match-string counter bag-rule)
-        ;;       (nconc contained-bags (list (match-string counter bag-rule)))
-        ;;       (setq counter (1+ counter)))))
-        ;; contained-bags))
-        ))))
+  (split-string (cadr (split-string bag-rule "contain")) ","))
+
+
+(defun contains-shiny-gold-p (contents)
+  "Check if CONTENTS has a gold bag."
+  (not (null (some (lambda (bag-string)
+                     (string-match "shiny gold" bag-string))
+                   contents))))
+
 
 (provide 'day7)
 ;;; day7.el ends here

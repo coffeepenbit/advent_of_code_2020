@@ -35,12 +35,39 @@
     (should (equal "pale green" (oref bag :name)))))
 
 
+(ert-deftest test-parse-all-bag-rules nil
+  (let ((rules "striped fuchsia bags contain 3 dim cyan bags.")
+        (expected '(#s(bag "striped fuchsia"
+                           (" 3 dim cyan bags.")))))
+    (let ((rules "striped fuchsia bags contain 3 dim cyan bags.
+mirrored black bags contain 1 plaid red bag, 3 light gold bags, 3 wavy violet bags.")
+          (expected '(#s(bag "striped fuchsia"
+                             (" 3 dim cyan bags."))
+                        #s(bag "mirrored black"
+                               (" 1 plaid red bag" " 3 light gold bags" " 3 wavy violet bags.")))))
+      (should (equal expected (parse-all-bag-rules rules))))))
+
+
+(ert-deftest test-parse-bag-rule nil
+  (let ((rule "striped fuchsia bags contain 3 dim cyan bags.")
+        (expected '("striped fuchsia" (" 3 dim cyan bags."))))
+    (should (equal expected (progn
+                              (let ((bag-rule (parse-bag-rule rule)))
+                                `(,(oref bag-rule :name) ,(oref bag-rule :contains))))))))
+
+
 (ert-deftest test-bag-name nil
   (should (equal "striped fuchsia" (bag-name "striped fuchsia bags contain 3 dim cyan bags."))))
 
 
 (ert-deftest test-bag-contains nil
-  (should (equal '("plaid red" "light gold" "wavy violet") (bag-contains "mirrored black bags contain 1 plaid red bag, 3 light gold bags, 3 wavy violet bags."))))
+  (should (equal '(" 1 plaid red bag" " 3 light gold bags" " 3 wavy violet bags.") (bag-contains "mirrored black bags contain 1 plaid red bag, 3 light gold bags, 3 wavy violet bags."))))
+
+
+(ert-deftest test-contains-shiny-gold-p nil
+  (should (equal t (contains-shiny-gold-p '("1 shiny gold bag"))))
+  (should (equal nil (contains-shiny-gold-p '("1 dim cyan bag"))))
+  (should (equal t (contains-shiny-gold-p '("1 dim cyan bag" "2 shiny gold bags")))))
 
 
 
